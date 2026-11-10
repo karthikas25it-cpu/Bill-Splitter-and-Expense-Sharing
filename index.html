@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SplitEasy - Bill Splitter & Expense Sharing</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">💸</div>
+                <div class="brand-text">
+                    <h2>SplitEasy</h2>
+                    <span>Java + REST API Mini Project</span>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <button class="nav-btn active" data-tab="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-btn" data-tab="add-expense">
+                    <span class="icon">➕</span>
+                    <span>Add Expense</span>
+                </button>
+                <button class="nav-btn" data-tab="friends">
+                    <span class="icon">👥</span>
+                    <span>Friends & Members</span>
+                </button>
+                <button class="nav-btn" data-tab="history">
+                    <span class="icon">📜</span>
+                    <span>Expense Ledger</span>
+                </button>
+                <button class="nav-btn" data-tab="settle">
+                    <span class="icon">🤝</span>
+                    <span>Settle Up</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-info">
+                <div class="status-indicator">
+                    <span class="dot"></span> Java Backend Online
+                </div>
+                <small>REST API: Port 8080</small>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-body">
+            <!-- Top App Bar -->
+            <header class="app-header">
+                <div>
+                    <h1 id="headerTitle">Dashboard & Smart Settlements</h1>
+                    <p id="headerSubtitle">Track shared expenses and settle debts with minimum transactions.</p>
+                </div>
+                <button class="btn-primary" onclick="showTab('add-expense')">
+                    ➕ Add Bill
+                </button>
+            </header>
+
+            <!-- Notification Toast Container -->
+            <div id="toast" class="toast"></div>
+
+            <!-- Tab 1: Dashboard -->
+            <section id="tab-dashboard" class="tab-content active">
+                <!-- Summary Metrics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">💰</div>
+                        <div>
+                            <span class="stat-title">Total Group Spending</span>
+                            <h2 id="statTotalSpend">₹0.00</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🧾</div>
+                        <div>
+                            <span class="stat-title">Total Bills Recorded</span>
+                            <h2 id="statTotalBills">0</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">👥</div>
+                        <div>
+                            <span class="stat-title">Active Friends</span>
+                            <h2 id="statTotalUsers">0</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon amber">⚡</div>
+                        <div>
+                            <span class="stat-title">Optimal Payments</span>
+                            <h2 id="statOptimalTx">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Debt Minimization (Greedy Cash Flow Algorithm) -->
+                <div class="card algo-box">
+                    <div class="algo-header">
+                        <span class="algo-tag">Java Cash Flow Algorithm</span>
+                        <h3>🧠 Smart Debt Settlements (Minimum Transactions)</h3>
+                        <p>Eliminates round-about payments so friends settle debts directly in the fewest payments possible!</p>
+                    </div>
+                    <div id="simplifiedSettlements" class="settlement-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Individual Net Balances -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>👤 Individual Net Balances</h3>
+                        <span class="badge">Live Calculation</span>
+                    </div>
+                    <div id="netBalancesList" class="balances-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 2: Add Expense -->
+            <section id="tab-add-expense" class="tab-content">
+                <div class="card form-container">
+                    <div class="card-header">
+                        <h2>➕ Split a New Bill</h2>
+                        <p>Add a restaurant bill, hotel stay, rental car, or groceries.</p>
+                    </div>
+
+                    <form id="expenseForm">
+                        <div class="form-group">
+                            <label>Description / Note *</label>
+                            <input type="text" id="expDesc" placeholder="e.g. Dinner at Beach Shack, Uber to Airport" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Total Amount (₹) *</label>
+                                <input type="number" id="expAmount" step="0.01" min="1" placeholder="0.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="expCategory">
+                                    <option value="Food & Dining">🍔 Food & Dining</option>
+                                    <option value="Travel & Fuel">🚗 Travel & Fuel</option>
+                                    <option value="Accommodation">🏠 Accommodation & Rent</option>
+                                    <option value="Entertainment">🎬 Movies & Fun</option>
+                                    <option value="Shopping">🛍️ Shopping & Groceries</option>
+                                    <option value="General">📦 General</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Paid By *</label>
+                            <select id="expPaidBy" required>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="split-info-header">
+                                <label>Split Among (Select Friends) *</label>
+                                <span id="splitSummaryText" class="split-summary-badge">₹0.00 each</span>
+                            </div>
+                            <div id="participantsList" class="checkbox-grid">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">💾 Split & Save Expense</button>
+                            <button type="button" class="btn-secondary" onclick="showTab('dashboard')">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tab 3: Friends -->
+            <section id="tab-friends" class="tab-content">
+                <div class="two-columns">
+                    <!-- Add Friend Form -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>👤 Add New Friend</h3>
+                            <p>Register someone in your sharing group</p>
+                        </div>
+                        <form id="friendForm">
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <input type="text" id="friendName" placeholder="e.g. Vikram Sharma" required>
+                            </div>
+                            <div class="form-group">
+                                <label>User ID (Unique key) *</label>
+                                <input type="text" id="friendId" placeholder="e.g. vikram" required pattern="[a-zA-Z0-9_-]+">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="friendEmail" placeholder="vikram@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="friendPhone" placeholder="9876543210">
+                            </div>
+                            <button type="submit" class="btn-primary" style="width:100%; margin-top:10px;">
+                                ➕ Add Member
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Friends Cards -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>👥 Active Friends (<span id="friendsCount">0</span>)</h3>
+                        </div>
+                        <div id="friendsGrid" class="friends-grid">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 4: History -->
+            <section id="tab-history" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📜 Complete Expense Ledger</h2>
+                        <span class="badge" id="expenseHistoryCount">0 expenses</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Paid By</th>
+                                    <th>Amount</th>
+                                    <th>Split Details</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 5: Settle Up -->
+            <section id="tab-settle" class="tab-content">
+                <div class="card form-container">
+                    <div class="card-header">
+                        <h2>🤝 Record a Settlement Payment</h2>
+                        <p>When a friend repays via UPI, Cash, or Bank Transfer, record it here to clear debts.</p>
+                    </div>
+
+                    <form id="settleForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Who Paid? (Debtor) *</label>
+                                <select id="settleFrom" required>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Who Received? (Creditor) *</label>
+                                <select id="settleTo" required>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Amount Paid (₹) *</label>
+                            <input type="number" id="settleAmount" step="0.01" min="1" placeholder="Enter amount" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Record Payment & Settle</button>
+                        </div>
+                    </form>
+
+                    <div class="quick-settle-box">
+                        <h4>💡 Recommended 1-Click Payments (from Algorithm):</h4>
+                        <div id="quickSettleButtons" class="quick-chips">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

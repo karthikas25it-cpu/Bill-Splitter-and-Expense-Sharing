@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run Bill Splitter Server",
+            "request": "launch",
+            "mainClass": "Server",
+            "projectName": "BillSplitter",
+            "classPaths": ["bin", "src"]
+        }
+    ]
+}
+

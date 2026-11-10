@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile Java",
+            "type": "shell",
+            "command": "javac -d bin src/*.java",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$javac"]
+        },
+        {
+            "label": "Run Server",
+            "type": "shell",
+            "command": "java -cp bin Server",
+            "dependsOn": "Compile Java",
+            "group": "test"
+        }
+    ]
+}
+
